@@ -8,3 +8,15 @@ type Item struct {
 	Bought bool `json:"bought"`
 
 }
+
+//encore:api public method=GET path=/items 
+func (s *Service)GetItems()(*[]Item,error){
+	var items []Item
+	err := s.db.Find(&items).Error
+	if err != nil {
+		return nil,err
+	}
+	return &items,nil
+
+}
+
