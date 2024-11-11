@@ -37,13 +37,19 @@ func (s *Service) GetItems(context.Context) (*getItemsResponse, error) {
 
 }
 
+type PostItemResponse struct {
+	Success bool `json:"success"`
+}
+var Success = PostItemResponse{Success: true}
+var Failure = PostItemResponse{Success: false}
+
 //encore:api public method=POST path=/items
-func (s *Service) CreateItem(ctx context.Context, item Item) (bool, error) {
+func (s *Service) CreateItem(ctx context.Context, item Item) (PostItemResponse, error) {
 	err := s.db.Create(&item).Error
 	if err != nil {
-		return false, err
+		return Failure, err
 	}
-	return true, nil
+	return Success, nil
 
 }
 
