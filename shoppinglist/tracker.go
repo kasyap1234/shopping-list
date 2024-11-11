@@ -3,12 +3,13 @@ package shoppinglist
 import "context"
 
 type Item struct {
-	ID       int     `json:"id"`
-	Name     string  `json:"name"`
-	Price    float64 `json:"price"`
-	Quantity int     `json:"quantity"`
-	Bought   bool    `json:"bought"`
+    ID       int     `json:"id"`  // Add table name
+    Name     string  `json:"name"`
+    Price    float64 `json:"price"`
+    Quantity int     `json:"quantity"`
+    Bought   bool    `json:"bought"`
 }
+
 type getItemsResponse struct {
 	Items []Item `json:"items"`
 }
@@ -43,7 +44,7 @@ type PostItemResponse struct {
 var Success = PostItemResponse{Success: true}
 var Failure = PostItemResponse{Success: false}
 
-//encore:api public method=POST path=/items
+//encore:api public method=POST path=/item
 func (s *Service) CreateItem(ctx context.Context, item Item) (PostItemResponse, error) {
 	err := s.db.Create(&item).Error
 	if err != nil {
@@ -55,9 +56,14 @@ func (s *Service) CreateItem(ctx context.Context, item Item) (PostItemResponse, 
 
 //encore:api public method=PUT path=/items/:id
 func (s *Service) UpdateItem(ctx context.Context, id int, item Item) (*getItemResponse, error) {
-	err := s.db.Model(&item).Where("id = ?", id).Updates(item).Error
-	if err != nil {
-		return nil, err
-	}
-	return &getItemResponse{Item: item}, nil
+    err := s.db.Model(&Item{}).Where("id = ?", id).Updates(map[string]interface{}{
+        "name": item.Name,
+        "price": item.Price,
+        "quantity": item.Quantity,
+        "bought": item.Bought,
+    }).Error
+    if err != nil {
+        return nil, err
+    }
+    return &getItemResponse{Item: item}, nil
 }

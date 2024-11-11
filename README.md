@@ -1,48 +1,112 @@
-# REST API Starter
+A RESTful API service for managing shopping lists built with Go and Encore.
 
-This is a RESTful API Starter with a single Hello World API endpoint.
+Features
+Create shopping list items
+Get all items
+Get single item by ID
+Update item details
+PostgreSQL database for persistence
+Prerequisites
+Install Encore
+Go 1.21+
 
-## Developing locally
-
-When you have [installed Encore](https://encore.dev/docs/install), you can create a new Encore application and clone this example with this command.
-
-```bash
-encore app create my-app-name --example=hello-world
-```
-
-## Running locally
-```bash
+encore app create my-shopping-list
+git clone <repository-url>
 encore run
-```
 
-While `encore run` is running, open [http://localhost:9400/](http://localhost:9400/) to view Encore's [local developer dashboard](https://encore.dev/docs/observability/dev-dash).
 
-## Using the API
+Access the local development dashboard at http://localhost:9400/
 
-To see that your app is running, you can ping the API.
+API Endpoints and Usage
+Get all items:
 
-```bash
-curl http://localhost:4000/hello/World
-```
 
-## Deployment
+curl http://localhost:4000/items
 
-Deploy your application to a staging environment in Encore's free development cloud:
 
-```bash
-git add -A .
-git commit -m 'Commit message'
+Get item by ID:
+
+curl http://localhost:4000/items/1
+
+
+Create new item:
+
+curl -X POST http://localhost:4000/items \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Milk", "price": 2.99, "quantity": 1, "bought": false}'
+
+
+
+  Update item:
+
+curl -X PUT http://localhost:4000/items/1 \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Milk", "price": 3.99, "quantity": 2, "bought": false}'
+
+
+Database Commands
+Reset database:
+
+encore db reset
+
+
+
+Deployment
+Deploy to Encore's development cloud:
+
+git add .
+git commit -m "Update message"
 git push encore
-```
 
-Then head over to the [Cloud Dashboard](https://app.encore.dev) to monitor your deployment and find your production URL.
 
-From there you can also connect your own AWS or GCP account to use for deployment.
 
-Now off you go into the clouds!
+Project Structure
+.
+├── shoppinglist/
+│   ├── migrations/       # Database migrations
+│   │   └── 1_create_tables.up.sql
+│   └── main.go          # Service code and API endpoints
 
-## Testing
 
-```bash
-encore test ./...
-```
+
+
+Built With
+Go
+Encore
+GORM
+PostgreSQL
+License
+MIT License
+
+API Response Format
+GET /items
+{
+    "items": [
+        {
+            "id": 1,
+            "name": "Milk",
+            "price": 2.99,
+            "quantity": 1,
+            "bought": false
+        }
+    ]
+}
+
+
+
+POST /items
+
+{
+    "success": true
+}
+
+
+
+The application uses Encore's built-in development environment. No additional configuration needed - just run encore run and start developing.
+
+Contributing
+Fork the repository
+Create your feature branch
+Commit your changes
+Push to the branch
+Create a new Pull Request
