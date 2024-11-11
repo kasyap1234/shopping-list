@@ -41,7 +41,7 @@ func (s *Service) GetItems(context.Context) (*getItemsResponse, error) {
 func (s *Service) CreateItem(ctx context.Context, item Item) (bool, error) {
 	err := s.db.Create(&item).Error
 	if err != nil {
-		return nil, err
+		return false, err
 	}
 	return true, nil
 
